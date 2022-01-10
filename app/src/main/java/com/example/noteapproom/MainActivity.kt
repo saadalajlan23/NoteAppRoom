@@ -21,13 +21,17 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val noteDao by lazy { NoteDatabase.getDatabase(this).noteDao() }
+
+
+
     private lateinit var notes: List<Note>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         notes = listOf()
         submit.setOnClickListener {
-            addNote(note.text.toString())
+            addNote(noteET.text.toString())
             updateRV()
         }
         getItemsList()
@@ -43,12 +47,11 @@ class MainActivity : AppCompatActivity() {
     private fun getItemsList(){
         CoroutineScope(IO).launch {
             val data = async {
-                NoteRepository(noteDao).getNotes
+                noteDao.getNotes()
             }.await()
             if(data.isNotEmpty()){
                 notes = data
-                Log.e("MainActivity", "$notes")
-                Log.e("MainActivity", "$data")
+
                 updateRV()
             }else{
                 Log.e("MainActivity", "Unable to get data", )
@@ -62,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Error note is empty!!", Toast.LENGTH_LONG).show()
         }else{
             CoroutineScope(IO).launch {
-                NoteRepository(noteDao).addNote(Note(0, noteText))
+                noteDao.addNote(Note(0, noteText))
             }
             noteET.text.clear()
             Toast.makeText(this, "Note Added ", Toast.LENGTH_LONG).show()
@@ -73,14 +76,14 @@ class MainActivity : AppCompatActivity() {
     private fun editNote(noteID: Int, noteText: String){
         Toast.makeText(this, "Note edited", Toast.LENGTH_LONG).show()
         CoroutineScope(IO).launch {
-            NoteRepository(noteDao).updateNote(Note(noteID,noteText))
+            noteDao.updateNote(Note(noteID,noteText))
         }
     }
 
     fun deleteNote(noteID: Int){
         Toast.makeText(this, "Note Deleted", Toast.LENGTH_LONG).show()
         CoroutineScope(IO).launch {
-            NoteRepository(noteDao).deleteNote(Note(noteID,""))
+            noteDao.deleteNote(Note(noteID,""))
 
 
         }

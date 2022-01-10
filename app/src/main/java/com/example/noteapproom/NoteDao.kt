@@ -8,7 +8,7 @@ interface NoteDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addNote(note: Note)
 
-    @Query("SELECT * FROM NotesTable ORDER BY id ASC")
+    @Query("SELECT * FROM Notes ORDER BY id ASC")
     fun getNotes(): List<Note>
 
     @Update

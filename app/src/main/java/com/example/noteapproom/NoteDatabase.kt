@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.noteapproom.NoteDao
 
 // click on key word and press Ctrl+Q to read more about them
 @Database(entities = [Note::class], version = 1, exportSchema = false)
